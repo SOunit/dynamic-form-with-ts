@@ -7,13 +7,14 @@ export enum FORM_ACTION_TYPES {
 
 export type Inputs = {
   [key: string]: {
-    value: any;
+    value: string | number | boolean;
     isValid: boolean;
   };
 };
 
 export type FormReducerState = {
   inputs: Inputs;
+  isValid: boolean;
 };
 
 export type InputChangeAction = {
@@ -70,17 +71,24 @@ const formReducer = (state: FormReducerState, action: FormReducerAction) => {
   }
 };
 
+export type FormInputHandler = (
+  id: string,
+  value: any,
+  isValid: boolean
+) => void;
+export type SetFormData = (inputData: Inputs, formValidity: boolean) => void;
+
 export const useForm = (
   initialInputs: Inputs,
   initialFormValidity: boolean
-) => {
+): [FormReducerState, FormInputHandler, SetFormData] => {
   const [formState, dispatch] = useReducer(formReducer, {
     inputs: initialInputs,
     isValid: initialFormValidity,
   });
 
   // no dependency means run only first time rendering
-  const inputHandler = useCallback(
+  const inputHandler: FormInputHandler = useCallback(
     (id: string, value: any, isValid: boolean) => {
       dispatch({
         type: FORM_ACTION_TYPES.INPUT_CHANGE,
@@ -92,7 +100,7 @@ export const useForm = (
     []
   );
 
-  const setFormData = useCallback(
+  const setFormData: SetFormData = useCallback(
     (inputData: Inputs, formValidity: boolean) => {
       dispatch({
         type: FORM_ACTION_TYPES.SET_DATA,

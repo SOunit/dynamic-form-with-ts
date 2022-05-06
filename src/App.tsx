@@ -1,9 +1,9 @@
-import SimpleInput from "./components/SimpleInput";
+import NewPlace from "./pages/NewPlace";
 
 function App() {
   return (
     <div className="app">
-      <SimpleInput />
+      <NewPlace />
     </div>
   );
 }
